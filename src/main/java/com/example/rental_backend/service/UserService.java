@@ -17,12 +17,12 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void registerUser(RegisterDTO registerDTO) {
+    public User registerUser(RegisterDTO registerDTO) {
         User user = new User();
         user.setName(registerDTO.getName());
         user.setEmail(registerDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 }
