@@ -30,6 +30,11 @@ public class AuthController {
         return "User registered successfully!";
     }
 
+    @GetMapping("/me")
+    public Object getCurrentUser(Authentication authentication) {
+        String email = authentication.getName(); 
+        return userService.getUserByEmail(email);
+    }
 
     @PostMapping("/login")
         public String getToken(@RequestBody LoginDTO loginDTO) {
