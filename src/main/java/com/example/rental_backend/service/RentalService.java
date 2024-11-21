@@ -40,15 +40,17 @@ public class RentalService {
         dto.setDescription(rental.getDescription());
         dto.setCreatedAt(rental.getCreatedAt());
         dto.setUpdatedAt(rental.getUpdatedAt());
-
-        // Convert Owner to UserDTO
-        UserDTO ownerDTO = new UserDTO();
-        ownerDTO.setId(rental.getOwner().getId());
-        ownerDTO.setEmail(rental.getOwner().getEmail());
-        ownerDTO.setName(rental.getOwner().getName());
+    
+        // Utilise un constructeur pour créer UserDTO
+        UserDTO ownerDTO = new UserDTO(
+            rental.getOwner().getId(),
+            rental.getOwner().getName(),
+            rental.getOwner().getEmail()
+        );
         
         dto.setOwner(ownerDTO); // Set the converted owner
-
+    
         return dto;
     }
+    
 }
