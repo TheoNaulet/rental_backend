@@ -30,6 +30,20 @@ public class UserService {
     public UserDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return new UserDTO(user.getId(), user.getName(), user.getEmail());
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getCreatedAt(), user.getUpdatedAt());
+    }
+
+
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        return new UserDTO(
+            user.getId(),
+            user.getName(),
+            user.getEmail(),
+            user.getCreatedAt(),
+            user.getUpdatedAt()
+        );
     }
 }

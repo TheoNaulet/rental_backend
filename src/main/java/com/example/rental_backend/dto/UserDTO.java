@@ -1,15 +1,21 @@
 package com.example.rental_backend.dto;
 
+import java.time.LocalDateTime;
+
 public class UserDTO {
     private Long id;
     private String email;
     private String name;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 
-    public UserDTO(Long id, String name, String email) {
+    public UserDTO(Long id, String name, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
     // Getters et Setters
     public Long getId() {
@@ -34,5 +40,21 @@ public class UserDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

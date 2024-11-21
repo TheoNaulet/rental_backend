@@ -45,7 +45,9 @@ public class RentalService {
         UserDTO ownerDTO = new UserDTO(
             rental.getOwner().getId(),
             rental.getOwner().getName(),
-            rental.getOwner().getEmail()
+            rental.getOwner().getEmail(),
+            rental.getOwner().getCreatedAt(),
+            rental.getOwner().getUpdatedAt()
         );
         
         dto.setOwner(ownerDTO); // Set the converted owner
