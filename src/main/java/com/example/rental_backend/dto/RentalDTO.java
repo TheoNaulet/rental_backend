@@ -7,8 +7,8 @@ public class RentalDTO {
 
     private Long id;
     private String name;
-    private BigDecimal surface;
-    private BigDecimal price;
+    private Integer surface;
+    private Double price;
     private String picture;
     private String description;
     private UserDTO owner;
@@ -25,11 +25,11 @@ public class RentalDTO {
         return name;
     }
 
-    public BigDecimal getSurface() {
+    public Integer getSurface() {
         return surface;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -62,11 +62,11 @@ public class RentalDTO {
         this.name = name;
     }
 
-    public void setSurface(BigDecimal surface) {
+    public void setSurface(Integer surface) {
         this.surface = surface;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
