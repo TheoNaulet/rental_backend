@@ -1,7 +1,10 @@
 package com.example.rental_backend.controller;
 
+import com.cloudinary.Cloudinary;
 import com.example.rental_backend.dto.LoginDTO;
 import com.example.rental_backend.dto.RegisterDTO;
+import com.example.rental_backend.repository.RentalRepository;
+import com.example.rental_backend.repository.UserRepository;
 import com.example.rental_backend.service.JWTService;
 import com.example.rental_backend.service.UserService;
 
@@ -15,14 +18,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
     public JWTService jwtService;
-
-    @Autowired
     public UserService userService;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
+
+    // Constructor injection for dependencies
+    public AuthController(JWTService jwtService, UserService userService, AuthenticationManager authenticationManager) {
+        this.jwtService = jwtService;
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+    }
 
     @PostMapping("/register")
     public String registerUser(@RequestBody RegisterDTO registerDTO) {
