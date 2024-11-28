@@ -95,6 +95,36 @@ public class RentalService {
             return convertToDTO(rental);
         }
 
+        /**
+         * Update an existing rental by its ID.
+         *
+         * @param id          the ID of the rental to update
+         * @param name        the updated name of the rental
+         * @param surface     the updated surface of the rental
+         * @param price       the updated price of the rental
+         * @param description the updated description of the rental
+         * @return the updated RentalDTO
+         * @throws IllegalArgumentException if the rental is not found
+         */
+        public RentalDTO updateRental(Long id, String name, Integer surface, Double price, String description) {
+            // Find the existing rental
+            Rental rental = rentalRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Rental not found with ID: " + id));
+
+            // Update the rental details
+            rental.setName(name);
+            rental.setSurface(surface);
+            rental.setPrice(price);
+            rental.setDescription(description);
+            rental.setUpdatedAt(LocalDateTime.now());
+
+            // Save the updated rental to the database
+            rentalRepository.save(rental);
+
+            // Convert the updated entity to DTO and return
+            return convertToDTO(rental);
+        }
+
     /**
      * Convert a Rental entity to a RentalDTO.
      * 

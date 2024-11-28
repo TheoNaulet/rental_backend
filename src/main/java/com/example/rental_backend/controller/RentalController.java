@@ -98,4 +98,44 @@ public class RentalController {
             return ResponseEntity.status(500).body(null);
         }
     }
+
+    /**
+     * Update an existing rental by its ID.
+     *
+     * @param id          the ID of the rental to update
+     * @param name        the updated name of the rental
+     * @param surface     the updated surface of the rental
+     * @param price       the updated price of the rental
+     * @param description the updated description of the rental
+     * @return a ResponseEntity containing the updated RentalDTO or an error status
+     */
+    @Operation(summary = "Update an existing rental")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Rental successfully updated"),
+        @ApiResponse(responseCode = "404", description = "Rental not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<RentalDTO> updateRental(
+        @PathVariable Long id,
+        @RequestParam("name") String name,
+        @RequestParam("surface") Integer surface,
+        @RequestParam("price") Double price,
+        @RequestParam("description") String description
+    ) {
+        try {
+            // Update the rental entity via the service
+            RentalDTO updatedRental = rentalService.updateRental(id, name, surface, price, description);
+
+            // Return the updated rental
+            return ResponseEntity.ok(updatedRental);
+        } catch (IllegalArgumentException e) {
+            // Handle not found exception
+            return ResponseEntity.status(404).body(null);
+        } catch (Exception e) {
+            // Handle other exceptions
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
 }
