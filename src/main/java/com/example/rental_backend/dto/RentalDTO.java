@@ -11,8 +11,8 @@ public class RentalDTO {
     private BigDecimal price;
     private String picture;
     private String description;
-    private UserDTO owner; // Ajout du champ owner de type UserDTO
-    private Long ownerId;          // Expose seulement l'ID du propriétaire
+    private UserDTO owner;
+    private Long ownerId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .build();
     }
 
+    //TEMPORARY FIX TO REMOVE
+    @SuppressWarnings("removal")
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder).and().build();
