@@ -64,10 +64,13 @@ public class RentalController {
     }
 
     /**
-     * Create a new rental with a picture.
-     * 
-     * @param rentalDTO the rental details
-     * @param picture   the rental picture file
+     * Create a new rental with an uploaded picture.
+     *
+     * @param name        the name of the rental
+     * @param surface     the surface of the rental
+     * @param price       the price of the rental
+     * @param description the description of the rental
+     * @param picture     the picture file to be uploaded
      * @return a ResponseEntity containing the created RentalDTO or an error status
      */
     @Operation(summary = "Create a new rental")
@@ -78,15 +81,20 @@ public class RentalController {
     })
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<RentalDTO> createRental(
-        @RequestPart("rental") RentalDTO rentalDTO,
-        @RequestPart("picture") MultipartFile picture
+        @RequestParam("name") String name,
+        @RequestParam("surface") Integer surface,
+        @RequestParam("price") Double price,
+        @RequestParam("description") String description,
+        @RequestParam("picture") MultipartFile picture
     ) {
         try {
-            // Create the rental and return 200 OK with the created data
-            RentalDTO createdRental = rentalService.createRental(rentalDTO, picture);
+            // Create the rental entity via the service
+            RentalDTO createdRental = rentalService.createRental(name, surface, price, description, picture, 3L);
+
+            // Return the created rental
             return ResponseEntity.ok(createdRental);
         } catch (IOException e) {
-            // Return 500 Internal Server Error if an exception occurs
+            // Handle file upload exceptions
             return ResponseEntity.status(500).body(null);
         }
     }
