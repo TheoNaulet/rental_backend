@@ -5,18 +5,20 @@ import com.example.rental_backend.dto.RegisterDTO;
 import com.example.rental_backend.dto.UserDTO;
 import com.example.rental_backend.model.User;
 import com.example.rental_backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public User registerUser(RegisterDTO registerDTO) {
         User user = new User();
