@@ -153,20 +153,4 @@ public class RentalService {
 
         return dto;
     }
-
-    /**
-     * Map a RentalDTO to a Rental entity.
-     * 
-     * @param rentalDTO the RentalDTO
-     * @return the corresponding Rental entity
-     */
-    private Rental mapToEntity(RentalDTO rentalDTO) {
-        Rental rental = new Rental();
-        rental.setName(rentalDTO.getName());
-        rental.setSurface(rentalDTO.getSurface());
-        rental.setPrice(rentalDTO.getPrice());
-        rental.setDescription(rentalDTO.getDescription());
-        // Picture is not set here; it will be handled in the createRental method
-        return rental;
-    }
 }
