@@ -6,7 +6,7 @@ import com.example.rental_backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
 
     private UserService userService;
@@ -17,7 +17,6 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDTO getUserById(@PathVariable Long id) {
-        System.out.println(id);
         return userService.getUserById(id);
     }
 }
