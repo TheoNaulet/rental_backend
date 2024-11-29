@@ -1,6 +1,5 @@
 package com.example.rental_backend.model;
 
-import jakarta.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

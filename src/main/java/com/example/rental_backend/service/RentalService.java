@@ -4,7 +4,6 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
 import com.example.rental_backend.dto.RentalDTO;
-import com.example.rental_backend.dto.UserDTO;
 import com.example.rental_backend.model.Rental;
 import com.example.rental_backend.model.User;
 import com.example.rental_backend.repository.RentalRepository;

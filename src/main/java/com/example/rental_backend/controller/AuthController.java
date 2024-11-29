@@ -1,10 +1,7 @@
 package com.example.rental_backend.controller;
 
-import com.cloudinary.Cloudinary;
 import com.example.rental_backend.dto.LoginDTO;
 import com.example.rental_backend.dto.RegisterDTO;
-import com.example.rental_backend.repository.RentalRepository;
-import com.example.rental_backend.repository.UserRepository;
 import com.example.rental_backend.service.JWTService;
 import com.example.rental_backend.service.UserService;
 
