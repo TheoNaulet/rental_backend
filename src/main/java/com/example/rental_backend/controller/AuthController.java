@@ -34,9 +34,24 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@RequestBody RegisterDTO registerDTO) {
+    public ResponseEntity<Map<String, String>> registerUser(@RequestBody RegisterDTO registerDTO) {
+        // Enregistrement de l'utilisateur
         userService.registerUser(registerDTO);
-        return "User registered successfully!";
+    
+        // Authentification immédiate après inscription pour générer un token
+        Authentication authenticate = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(registerDTO.getEmail(), registerDTO.getPassword())
+        );
+    
+        // Génération du token JWT
+        String token = jwtService.generateToken(authenticate);
+    
+        // Préparation de la réponse JSON
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+    
+        // Retourne une réponse HTTP 200 avec le token
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/me")

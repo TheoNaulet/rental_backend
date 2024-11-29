@@ -75,7 +75,6 @@ public class RentalService {
             User owner = userRepository.findById(ownerId)
                 .orElseThrow(() -> new IllegalArgumentException("Owner not found with ID: " + ownerId));
 
-
             System.out.println("Owner found: " + owner);
             // Create the rental entity
             Rental rental = new Rental();
@@ -84,8 +83,8 @@ public class RentalService {
             rental.setPrice(price);
             rental.setDescription(description);
             rental.setPicture(pictureUrl); // Set the uploaded picture URL
-            rental.setCreatedAt(LocalDateTime.now());
-            rental.setUpdatedAt(LocalDateTime.now());
+            rental.setCreated_at(LocalDateTime.now());
+            rental.setUpdated_at(LocalDateTime.now());
             rental.setOwner(owner); // Associe le propriétaire
 
             // Save the rental to the database
@@ -116,7 +115,7 @@ public class RentalService {
             rental.setSurface(surface);
             rental.setPrice(price);
             rental.setDescription(description);
-            rental.setUpdatedAt(LocalDateTime.now());
+            rental.setUpdated_at(LocalDateTime.now());
 
             // Save the updated rental to the database
             rentalRepository.save(rental);
@@ -139,16 +138,16 @@ public class RentalService {
         dto.setPrice(rental.getPrice());
         dto.setPicture(rental.getPicture());
         dto.setDescription(rental.getDescription());
-        dto.setCreatedAt(rental.getCreatedAt());
-        dto.setUpdatedAt(rental.getUpdatedAt());
-
+        dto.setCreated_at(rental.getCreated_at());
+        dto.setUpdated_at(rental.getUpdated_at());
+        
         // Map the owner entity to a UserDTO
         UserDTO ownerDTO = new UserDTO(
             rental.getOwner().getId(),
             rental.getOwner().getName(),
             rental.getOwner().getEmail(),
-            rental.getOwner().getCreatedAt(),
-            rental.getOwner().getUpdatedAt()
+            rental.getOwner().getCreated_at(),
+            rental.getOwner().getUpdated_at()
         );
         dto.setOwner(ownerDTO);
 

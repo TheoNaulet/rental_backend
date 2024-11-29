@@ -1,22 +1,36 @@
 package com.example.rental_backend.controller;
 
 import com.example.rental_backend.dto.RentalDTO;
+import com.example.rental_backend.model.User;
+import com.example.rental_backend.repository.UserRepository;
 import com.example.rental_backend.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.Authentication;
+
+import org.springframework.security.oauth2.jwt.Jwt;
+
+
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.HashMap;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rentals")
 public class RentalController {
+
+    @Autowired
+    private UserRepository userRepository;
 
     private final RentalService rentalService;
 
@@ -29,20 +43,22 @@ public class RentalController {
         this.rentalService = rentalService;
     }
 
-    /**
-     * Retrieve all rentals.
-     * 
-     * @return a list of RentalDTO objects
-     */
     @Operation(summary = "Get all rentals")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved rentals"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping
-    public List<RentalDTO> getAllRentals() {
-        return rentalService.getAllRentals();
+    public Map<String, List<RentalDTO>> getAllRentals() {
+        List<RentalDTO> rentals = rentalService.getAllRentals();
+
+        // Créez un objet réponse avec une clé "rentals"
+        Map<String, List<RentalDTO>> response = new HashMap<>();
+        response.put("rentals", rentals);
+
+        return response;
     }
+
 
     /**
      * Retrieve a rental by its ID.
@@ -85,11 +101,21 @@ public class RentalController {
         @RequestParam("surface") Integer surface,
         @RequestParam("price") Double price,
         @RequestParam("description") String description,
-        @RequestParam("picture") MultipartFile picture
+        @RequestParam("picture") MultipartFile picture,
+        Authentication authentication
     ) {
         try {
+            String email = authentication.getName();
+
+            // Rechercher l'utilisateur dans la base de données
+            User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+            System.out.println("User found: " + user.getId());
+
             // Create the rental entity via the service
-            RentalDTO createdRental = rentalService.createRental(name, surface, price, description, picture, 3L);
+            RentalDTO createdRental = rentalService.createRental(name, surface, price, description, picture, user.getId());
+
 
             // Return the created rental
             return ResponseEntity.ok(createdRental);
