@@ -5,17 +5,21 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration class for integrating the Cloudinary service with the application.
+ * This class defines a Spring Bean for Cloudinary, configured via environment variables.
+ */
 @Configuration
 public class CloudinaryConfig {
 
     /**
-     * Configures and provides a Cloudinary instance as a Spring Bean.
-     * 
+     * Creates and provides a Cloudinary instance as a Spring Bean.
+     * The configuration is based on the `CLOUDINARY_URL` environment variable.
+     *
      * @return a configured Cloudinary instance
-     * @throws IllegalStateException if configuration fails
+     * @throws IllegalStateException if the `CLOUDINARY_URL` is missing or invalid
      */
     @Bean
-
     public Cloudinary cloudinary() {
         try {
             // Load environment variables using Dotenv
@@ -24,15 +28,15 @@ public class CloudinaryConfig {
             // Retrieve the CLOUDINARY_URL from the environment
             String cloudinaryUrl = dotenv.get("CLOUDINARY_URL");
 
-            // Ensure the URL is not null or empty
+            // Validate the presence of the CLOUDINARY_URL variable
             if (cloudinaryUrl == null || cloudinaryUrl.isEmpty()) {
                 throw new IllegalStateException("CLOUDINARY_URL environment variable is missing");
             }
 
-            // Create and return a Cloudinary instance
+            // Create and return a Cloudinary instance using the retrieved URL
             return new Cloudinary(cloudinaryUrl);
         } catch (Exception e) {
-            // Wrap any exception into an IllegalStateException for better error handling
+            // Handle any exceptions during configuration
             throw new IllegalStateException("Failed to configure Cloudinary", e);
         }
     }
