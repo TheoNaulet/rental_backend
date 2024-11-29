@@ -66,14 +66,14 @@ public class RentalService {
          * @return the created RentalDTO
          * @throws IOException if there is an error during file upload
          */
-        public RentalDTO createRental(String name, Integer surface, Double price, String description, MultipartFile picture, Long ownerId) throws IOException {
+        public RentalDTO createRental(String name, Integer surface, Double price, String description, MultipartFile picture, Long owner_id) throws IOException {
     
             // Upload the picture to Cloudinary
             Map<String, Object> uploadResult = cloudinary.uploader().upload(picture.getBytes(), ObjectUtils.emptyMap());
             String pictureUrl = (String) uploadResult.get("url");
             
-            User owner = userRepository.findById(ownerId)
-                .orElseThrow(() -> new IllegalArgumentException("Owner not found with ID: " + ownerId));
+            User owner = userRepository.findById(owner_id)
+                .orElseThrow(() -> new IllegalArgumentException("Owner not found with ID: " + owner_id));
 
             System.out.println("Owner found: " + owner);
             // Create the rental entity
@@ -85,7 +85,8 @@ public class RentalService {
             rental.setPicture(pictureUrl); // Set the uploaded picture URL
             rental.setCreated_at(LocalDateTime.now());
             rental.setUpdated_at(LocalDateTime.now());
-            rental.setOwner(owner); // Associe le propriétaire
+            rental.setOwner_id(owner.getId());
+            // rental.setOwner(owner); // Associe le propriétaire
 
             // Save the rental to the database
             rentalRepository.save(rental);
@@ -140,17 +141,7 @@ public class RentalService {
         dto.setDescription(rental.getDescription());
         dto.setCreated_at(rental.getCreated_at());
         dto.setUpdated_at(rental.getUpdated_at());
-        
-        // Map the owner entity to a UserDTO
-        UserDTO ownerDTO = new UserDTO(
-            rental.getOwner().getId(),
-            rental.getOwner().getName(),
-            rental.getOwner().getEmail(),
-            rental.getOwner().getCreated_at(),
-            rental.getOwner().getUpdated_at()
-        );
-        dto.setOwner(ownerDTO);
-
+        dto.setOwner_id(rental.getOwner_id());
         return dto;
     }
 }

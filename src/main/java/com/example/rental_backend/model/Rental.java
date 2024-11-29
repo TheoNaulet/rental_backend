@@ -27,9 +27,8 @@ public class Rental {
     @Column(length = 2000)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    @Column(name = "owner_id", nullable = false)
+    private Long owner_id;
 
     @Column(name = "created_at")
     private LocalDateTime created_at;
@@ -87,13 +86,14 @@ public void setDescription(String description) {
     this.description = description;
 }
 
-public User getOwner() {
-    return owner;
+public Long getOwner_id() {
+    return owner_id;
 }
 
-public void setOwner(User owner) {
-    this.owner = owner;
+public void setOwner_id(Long owner_id) {
+    this.owner_id = owner_id;
 }
+
 
 public LocalDateTime getCreated_at() {
     return created_at;

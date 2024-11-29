@@ -1,6 +1,5 @@
 package com.example.rental_backend.dto;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class RentalDTO {
@@ -11,8 +10,8 @@ public class RentalDTO {
     private Double price;
     private String picture;
     private String description;
-    private UserDTO owner;
-    private Long ownerId;
+    // private UserDTO owner;
+    private Long owner_id;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
@@ -41,8 +40,8 @@ public class RentalDTO {
         return description;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
+    public Long getOwner_id() {
+        return owner_id;
     }
 
     public LocalDateTime getCreated_at() {
@@ -78,16 +77,16 @@ public class RentalDTO {
         this.description = description;
     }
 
-    public UserDTO getOwner() {
-        return owner;
-    }
+    // public UserDTO getOwner() {
+    //     return owner;
+    // }
 
-    public void setOwner(UserDTO owner) {
-        this.owner = owner;
-    }
+    // public void setOwner(UserDTO owner) {
+    //     this.owner = owner;
+    // }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setOwner_id(Long owner_id) {
+        this.owner_id = owner_id;
     }
 
     public void setCreated_at(LocalDateTime created_at) {
