@@ -1,6 +1,7 @@
 package com.example.rental_backend.controller;
 
 import com.example.rental_backend.dto.RentalDTO;
+import com.example.rental_backend.dto.RentalsWrapperDTO;
 import com.example.rental_backend.model.User;
 import com.example.rental_backend.repository.UserRepository;
 import com.example.rental_backend.service.RentalService;
@@ -25,34 +26,40 @@ import java.util.Map;
 @RequestMapping("/api/rentals")
 public class RentalController {
 
-    @Autowired
-    private UserRepository userRepository;
-
+    private final UserRepository userRepository;
     private final RentalService rentalService;
 
     /**
-     * Constructor injection for RentalService dependency.
+     * Constructor injection for dependencies.
      * 
      * @param rentalService the service managing rental operations
+     * @param userRepository the repository for user data
      */
-    public RentalController(RentalService rentalService) {
+    public RentalController(RentalService rentalService, UserRepository userRepository) {
         this.rentalService = rentalService;
+        this.userRepository = userRepository;
     }
-
+    
     @Operation(summary = "Get all rentals")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved rentals"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping
-    public Map<String, List<RentalDTO>> getAllRentals() {
-        List<RentalDTO> rentals = rentalService.getAllRentals();
+    public ResponseEntity<RentalsWrapperDTO> getAllRentals() {
+        try {
+            // Retrieve the list of rentals from the service
+            List<RentalDTO> rentals = rentalService.getAllRentals();
 
-        // Créez un objet réponse avec une clé "rentals"
-        Map<String, List<RentalDTO>> response = new HashMap<>();
-        response.put("rentals", rentals);
+            // Wrap the rentals list in RentalsWrapperDTO
+            RentalsWrapperDTO response = new RentalsWrapperDTO(rentals);
 
-        return response;
+            // Return the wrapped response
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
     }
 
 
@@ -106,8 +113,6 @@ public class RentalController {
             // Rechercher l'utilisateur dans la base de données
             User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-            System.out.println("User found: " + user.getId());
 
             // Create the rental entity via the service
             RentalDTO createdRental = rentalService.createRental(name, surface, price, description, picture, user.getId());
