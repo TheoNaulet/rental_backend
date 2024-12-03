@@ -30,8 +30,8 @@ public class UserService {
         user.setName(registerDTO.getName());
         user.setEmail(registerDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        user.setCreated_at(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
-        user.setUpdated_at(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
+        user.setCreatedAt(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
+        user.setUpdatedAt(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
 
         return userRepository.save(user);
     }
@@ -39,7 +39,7 @@ public class UserService {
     public UserDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getCreated_at(), user.getUpdated_at());
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getCreatedAt(), user.getUpdatedAt());
     }
 
 
@@ -51,8 +51,8 @@ public class UserService {
             user.getId(),
             user.getName(),
             user.getEmail(),
-            user.getCreated_at(),
-            user.getUpdated_at()
+            user.getCreatedAt(),
+            user.getUpdatedAt()
         );
     }
 }

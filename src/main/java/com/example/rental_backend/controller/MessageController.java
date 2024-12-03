@@ -47,8 +47,8 @@ public class MessageController {
             // Process the message
             MessageDTO sentMessage = messageService.sendMessage(
                 messageDTO.getMessage(),
-                messageDTO.getUser_id(),
-                messageDTO.getRental_id()
+                messageDTO.getUserId(),
+                messageDTO.getRentalId()
             );
 
             // Return the response

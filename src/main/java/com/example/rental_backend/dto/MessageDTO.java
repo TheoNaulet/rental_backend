@@ -2,23 +2,34 @@ package com.example.rental_backend.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * DTO for transferring message information between the client and the backend.
+ */
 public class MessageDTO {
 
-    private Long id;
+    private Long id; // Unique identifier for the message
 
-    private String message;
+    private String message; // Content of the message
 
-    private Long user_id; // Aligné avec le JSON
+    @JsonProperty("user_id") // Maps "user_id" in JSON to the "userId" field in Java
+    private Long userId;
 
-    private Long rental_id; // Aligné avec le JSON
+    @JsonProperty("rental_id") // Maps "rental_id" in JSON to the "rentalId" field in Java
+    private Long rentalId; // Rental ID associated with the message, aligned with JSON
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt; // Timestamp when the message was created
 
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets the unique identifier for the message.
+     * @param id the message ID
+     */
     public void setId(Long id) {
         this.id = id;
     }
@@ -27,30 +38,46 @@ public class MessageDTO {
         return message;
     }
 
+    /**
+     * Sets the content of the message.
+     * @param message the message content
+     */
     public void setMessage(String message) {
         this.message = message;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    /**
+     * Sets the user ID associated with the message.
+     * @param userId the user's ID
+     */
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Long getRental_id() {
-        return rental_id;
+    public Long getRentalId() {
+        return rentalId;
     }
 
-    public void setRental_id(Long rental_id) {
-        this.rental_id = rental_id;
+    /**
+     * Sets the rental ID associated with the message.
+     * @param rentalId the rental's ID
+     */
+    public void setRentalId(Long rentalId) {
+        this.rentalId = rentalId;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
+    /**
+     * Sets the creation timestamp for the message.
+     * @param createdAt the timestamp when the message was created
+     */
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }

@@ -31,21 +31,21 @@ public class MessageService {
         this.rentalRepository = rentalRepository;
     }
 
-    public MessageDTO sendMessage(String messageContent, Long user_id, Long rental_id) {
-        logger.info("sendMessage called with message: {}, user_id: {}, rental_id: {}", messageContent, user_id, rental_id);
+    public MessageDTO sendMessage(String messageContent, Long userId, Long rentalId) {
+        logger.info("sendMessage called with message: {}, user_id: {}, rental_id: {}", messageContent, userId, rentalId);
     
         // Vérifiez si user_id ou rental_id est null
-        if (user_id == null) {
+        if (userId == null) {
             throw new IllegalArgumentException("User ID must not be null");
         }
-        if (rental_id == null) {
+        if (rentalId == null) {
             throw new IllegalArgumentException("Rental ID must not be null");
         }
     
-        User user = userRepository.findById(user_id)
-            .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + user_id));
-        Rental rental = rentalRepository.findById(rental_id)
-            .orElseThrow(() -> new IllegalArgumentException("Rental not found with ID: " + rental_id));
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+        Rental rental = rentalRepository.findById(rentalId)
+            .orElseThrow(() -> new IllegalArgumentException("Rental not found with ID: " + rentalId));
     
         Message message = new Message();
         message.setMessage(messageContent);
@@ -58,8 +58,8 @@ public class MessageService {
         MessageDTO messageDTO = new MessageDTO();
         messageDTO.setId(savedMessage.getId());
         messageDTO.setMessage(savedMessage.getMessage());
-        messageDTO.setUser_id(savedMessage.getUser().getId());
-        messageDTO.setRental_id(savedMessage.getRental().getId());
+        messageDTO.setUserId(savedMessage.getUser().getId());
+        messageDTO.setRentalId(savedMessage.getRental().getId());
         messageDTO.setCreatedAt(savedMessage.getCreatedAt());
     
         return messageDTO;

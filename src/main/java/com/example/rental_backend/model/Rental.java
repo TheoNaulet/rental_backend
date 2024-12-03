@@ -26,13 +26,13 @@ public class Rental {
     private String description;
 
     @Column(name = "owner_id", nullable = false)
-    private Long owner_id;
+    private Long ownerId;
 
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt; 
 
-    @Column(name = "updated_at")
-    private LocalDateTime updated_at;
+   @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
 // Getters and Setters
 
@@ -84,28 +84,28 @@ public void setDescription(String description) {
     this.description = description;
 }
 
-public Long getOwner_id() {
-    return owner_id;
+public Long getOwnerId() {
+    return ownerId;
 }
 
-public void setOwner_id(Long owner_id) {
-    this.owner_id = owner_id;
+public void setOwnerId(Long ownerId) {
+    this.ownerId = ownerId;
 }
 
 
-public LocalDateTime getCreated_at() {
-    return created_at;
+public LocalDateTime getCreatedAt() {
+    return createdAt;
 }
 
-public void setCreated_at(LocalDateTime created_at) {
-    this.created_at = created_at;
+public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
 }
 
-public LocalDateTime getUpdated_at() {
-    return updated_at;
+public LocalDateTime getUpdatedAt() {
+    return updatedAt;
 }
 
-public void setUpdated_at(LocalDateTime updated_at) {
-    this.updated_at = updated_at;
+public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
 }
 }

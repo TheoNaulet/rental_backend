@@ -82,9 +82,9 @@ public class RentalService {
             rental.setPrice(price);
             rental.setDescription(description);
             rental.setPicture(pictureUrl); // Set the uploaded picture URL
-            rental.setCreated_at(LocalDateTime.now());
-            rental.setUpdated_at(LocalDateTime.now());
-            rental.setOwner_id(owner.getId());
+            rental.setCreatedAt(LocalDateTime.now());
+            rental.setUpdatedAt(LocalDateTime.now());
+            rental.setOwnerId(owner.getId());
             // rental.setOwner(owner); // Associe le propriétaire
 
             // Save the rental to the database
@@ -115,7 +115,7 @@ public class RentalService {
             rental.setSurface(surface);
             rental.setPrice(price);
             rental.setDescription(description);
-            rental.setUpdated_at(LocalDateTime.now());
+            rental.setUpdatedAt(LocalDateTime.now());
 
             // Save the updated rental to the database
             rentalRepository.save(rental);
@@ -138,9 +138,9 @@ public class RentalService {
         dto.setPrice(rental.getPrice());
         dto.setPicture(rental.getPicture());
         dto.setDescription(rental.getDescription());
-        dto.setCreated_at(rental.getCreated_at());
-        dto.setUpdated_at(rental.getUpdated_at());
-        dto.setOwner_id(rental.getOwner_id());
+        dto.setCreatedAt(rental.getCreatedAt());
+        dto.setUpdatedAt(rental.getUpdatedAt());
+        dto.setOwnerId(rental.getOwnerId());
         return dto;
     }
 }
