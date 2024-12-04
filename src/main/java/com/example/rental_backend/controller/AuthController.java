@@ -78,6 +78,9 @@ public class AuthController {
         // Fetch the user's details using the email
         UserDTO userResponse = userService.getUserByEmail(email);
 
+        System.out.println("User details: " + userResponse);
+        System.out.println("User email: " + userService.getUserByEmail(email));
+
         // Return the user's details as a response
         return ResponseEntity.ok(userResponse);
     }

@@ -14,10 +14,10 @@ public class UserDTO {
     
     private String name; // User's name
 
-    @JsonProperty("created_at") // Maps JSON "created_at" to the Java field "createdAt"
+    @JsonProperty("created_at") // Maps JSON "createdAt" to the Java field "createdAt"
     private LocalDateTime createdAt; // Timestamp when the user was created
 
-    @JsonProperty("updated_at") // Maps JSON "updated_at" to the Java field "updatedAt"
+    @JsonProperty("updated_at") // Maps JSON "updatedAt" to the Java field "updatedAt"
     private LocalDateTime updatedAt; // Timestamp when the user was last updated
 
     /**
