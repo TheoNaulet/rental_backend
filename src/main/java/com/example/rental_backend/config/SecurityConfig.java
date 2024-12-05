@@ -68,7 +68,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF since we're using stateless JWTs
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless sessions
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Public endpoints
+                    .requestMatchers( 
+                        "/api/auth/register", 
+                        "/api/auth/login",
+                        "/v3/api-docs/**",    // Endpoints OpenAPI
+                        "/swagger-ui/**",     // Swagger UI static files
+                        "/swagger-ui.html",   // Swagger UI entry point
+                        "/api-docs/swagger-config" ).permitAll() // Public endpoints
                     .anyRequest().authenticated() // All other endpoints require authentication
                 ).oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Enable JWT-based OAuth2 resource server
                 .build();
