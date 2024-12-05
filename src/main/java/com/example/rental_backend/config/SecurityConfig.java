@@ -71,10 +71,9 @@ public class SecurityConfig {
                     .requestMatchers( 
                         "/api/auth/register", 
                         "/api/auth/login",
-                        "/v3/api-docs/**",    // Endpoints OpenAPI
+                        "/api-docs/**",    // Endpoints OpenAPI
                         "/swagger-ui/**",     // Swagger UI static files
-                        "/swagger-ui.html",   // Swagger UI entry point
-                        "/api-docs/swagger-config" ).permitAll() // Public endpoints
+                        "/swagger-ui.html").permitAll() // Public endpoints
                     .anyRequest().authenticated() // All other endpoints require authentication
                 ).oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Enable JWT-based OAuth2 resource server
                 .build();
