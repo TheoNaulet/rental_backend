@@ -2,6 +2,7 @@ package com.example.rental_backend.controller;
 
 import com.example.rental_backend.dto.RentalDTO;
 import com.example.rental_backend.dto.RentalsWrapperDTO;
+import com.example.rental_backend.dto.ResponseMessageDTO;
 import com.example.rental_backend.model.User;
 import com.example.rental_backend.repository.UserRepository;
 import com.example.rental_backend.service.RentalService;
@@ -9,18 +10,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.Authentication;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.HashMap;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rentals")
@@ -62,7 +58,6 @@ public class RentalController {
         }
     }
 
-
     /**
      * Retrieve a rental by its ID.
      * 
@@ -83,23 +78,29 @@ public class RentalController {
     }
 
     /**
-     * Create a new rental with an uploaded picture.
+     * Endpoint to create a new rental with an uploaded picture.
      *
-     * @param name        the name of the rental
-     * @param surface     the surface of the rental
-     * @param price       the price of the rental
-     * @param description the description of the rental
-     * @param picture     the picture file to be uploaded
-     * @return a ResponseEntity containing the created RentalDTO or an error status
+     * This method handles the creation of a rental by accepting details such as the name,
+     * surface, price, description, and a picture file. It retrieves the authenticated user's
+     * email to associate the rental with the correct user. The rental is then created and
+     * stored in the database.
+     *
+     * @param name        the name of the rental to be created
+     * @param surface     the surface area of the rental (in square meters)
+     * @param price       the price of the rental (in the chosen currency)
+     * @param description a brief description of the rental
+     * @param picture     the picture file representing the rental
+     * @param authentication the authentication object containing user credentials
+     * @return a ResponseEntity containing a success message or an error message
      */
     @Operation(summary = "Create a new rental")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Rental successfully created"),
-        @ApiResponse(responseCode = "400", description = "Invalid input data"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+        @ApiResponse(responseCode = "200", description = "Rental created!"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data provided"),
+        @ApiResponse(responseCode = "500", description = "Internal server error occurred")
     })
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<RentalDTO> createRental(
+    public ResponseEntity<ResponseMessageDTO> createRental(
         @RequestParam("name") String name,
         @RequestParam("surface") Integer surface,
         @RequestParam("price") Double price,
@@ -108,23 +109,27 @@ public class RentalController {
         Authentication authentication
     ) {
         try {
+            // Retrieve the authenticated user's email
             String email = authentication.getName();
 
-            // Rechercher l'utilisateur dans la base de données
+            // Fetch the user from the database by email
             User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Create the rental entity via the service
-            RentalDTO createdRental = rentalService.createRental(name, surface, price, description, picture, user.getId());
+            // Delegate rental creation to the service layer
+            rentalService.createRental(name, surface, price, description, picture, user.getId());
 
-
-            // Return the created rental
-            return ResponseEntity.ok(createdRental);
-        } catch (IOException e) {
-            // Handle file upload exceptions
-            return ResponseEntity.status(500).body(null);
+            // Return a success message upon successful creation
+            return ResponseEntity.ok(new ResponseMessageDTO("Rental created !"));
+        } catch (IllegalArgumentException e) {
+            // Handle invalid input errors
+            return ResponseEntity.badRequest().body(new ResponseMessageDTO(e.getMessage()));
+        } catch (Exception e) {
+            // Handle unexpected server errors
+            return ResponseEntity.status(500).body(new ResponseMessageDTO("An internal error occurred"));
         }
     }
+
 
     /**
      * Update an existing rental by its ID.
@@ -143,7 +148,7 @@ public class RentalController {
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<RentalDTO> updateRental(
+    public ResponseEntity<ResponseMessageDTO> updateRental(
         @PathVariable Long id,
         @RequestParam("name") String name,
         @RequestParam("surface") Integer surface,
@@ -152,16 +157,16 @@ public class RentalController {
     ) {
         try {
             // Update the rental entity via the service
-            RentalDTO updatedRental = rentalService.updateRental(id, name, surface, price, description);
+                rentalService.updateRental(id, name, surface, price, description);
 
             // Return the updated rental
-            return ResponseEntity.ok(updatedRental);
+            return ResponseEntity.ok(new ResponseMessageDTO("Rental updated !"));
         } catch (IllegalArgumentException e) {
-            // Handle not found exception
-            return ResponseEntity.status(404).body(null);
+            // Handle invalid input errors
+            return ResponseEntity.badRequest().body(new ResponseMessageDTO(e.getMessage()));
         } catch (Exception e) {
-            // Handle other exceptions
-            return ResponseEntity.status(500).body(null);
+            // Handle unexpected server errors
+            return ResponseEntity.status(500).body(new ResponseMessageDTO("An internal error occurred"));
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.rental_backend.controller;
 
 import com.example.rental_backend.dto.MessageDTO;
+import com.example.rental_backend.dto.ResponseMessageDTO;
 import com.example.rental_backend.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,28 +36,23 @@ public class MessageController {
      */
     @Operation(summary = "Send a message")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Message successfully sent"),
+        @ApiResponse(responseCode = "200", description = "Message send with success"),
         @ApiResponse(responseCode = "400", description = "Invalid input data"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
-    public ResponseEntity<MessageDTO> sendMessage(
-        @RequestBody MessageDTO messageDTO
-    ) {
+    public ResponseEntity<ResponseMessageDTO> sendMessage(@RequestBody MessageDTO messageDTO) {
         try {
-            // Process the message
-            MessageDTO sentMessage = messageService.sendMessage(
+            messageService.sendMessage(
                 messageDTO.getMessage(),
                 messageDTO.getUserId(),
                 messageDTO.getRentalId()
             );
-
-            // Return the response
-            return ResponseEntity.ok(sentMessage);
+            return ResponseEntity.ok(new ResponseMessageDTO("Message send with success"));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(new ResponseMessageDTO(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(null);
+            return ResponseEntity.status(500).body(new ResponseMessageDTO("An internal error occurred"));
         }
     }
 }
