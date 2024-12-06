@@ -7,6 +7,9 @@ import com.example.rental_backend.dto.UserDTO;
 import com.example.rental_backend.service.JWTService;
 import com.example.rental_backend.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -47,6 +50,12 @@ public class AuthController {
      * @param registerDTO the data for user registration
      * @return a ResponseEntity containing the generated JWT token
      */
+    @Operation(summary = "Register a new user", description = "Registers a new user and returns a JWT token.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User registered successfully and JWT token returned."),
+        @ApiResponse(responseCode = "400", description = "Invalid input data."),
+        @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody RegisterDTO registerDTO) {
         // Register the new user
@@ -70,6 +79,12 @@ public class AuthController {
      * @param authentication the current authentication object
      * @return a ResponseEntity containing the user's details
      */
+    @Operation(summary = "Get current authenticated user", description = "Fetches details of the currently authenticated user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User details retrieved successfully."),
+        @ApiResponse(responseCode = "401", description = "Unauthorized access."),
+        @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getCurrentUser(Authentication authentication) {
         // Retrieve the user's email from the authentication object
@@ -92,6 +107,12 @@ public class AuthController {
      * @param loginDTO the data for user login
      * @return a ResponseEntity containing the generated JWT token
      */
+    @Operation(summary = "Log in an existing user", description = "Authenticates a user and returns a JWT token.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User logged in successfully and JWT token returned."),
+        @ApiResponse(responseCode = "401", description = "Invalid credentials."),
+        @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
         // Authenticate the user
