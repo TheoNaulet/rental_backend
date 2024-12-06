@@ -65,16 +65,16 @@ public class RentalService {
          * @return the created RentalDTO
          * @throws IOException if there is an error during file upload
          */
-        public RentalDTO createRental(String name, Integer surface, Double price, String description, MultipartFile picture, Long owner_id) throws IOException {
+        public RentalDTO createRental(String name, Integer surface, Double price, String description, MultipartFile picture, String email) throws IOException {
     
             // Upload the picture to Cloudinary
             Map<String, Object> uploadResult = cloudinary.uploader().upload(picture.getBytes(), ObjectUtils.emptyMap());
             String pictureUrl = (String) uploadResult.get("url");
             
-            User owner = userRepository.findById(owner_id)
-                .orElseThrow(() -> new IllegalArgumentException("Owner not found with ID: " + owner_id));
+            // Find the owner by email
+            User owner = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Owner not found with ID: " + email));
 
-            System.out.println("Owner found: " + owner);
             // Create the rental entity
             Rental rental = new Rental();
             rental.setName(name);

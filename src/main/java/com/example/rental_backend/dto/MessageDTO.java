@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * DTO for transferring message information between the client and the backend.
  */
@@ -11,6 +13,7 @@ public class MessageDTO {
 
     private Long id; // Unique identifier for the message
 
+    @NotBlank
     private String message; // Content of the message
 
     @JsonProperty("user_id") // Maps "user_id" in JSON to the "userId" field in Java

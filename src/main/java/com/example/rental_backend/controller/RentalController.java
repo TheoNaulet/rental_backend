@@ -109,15 +109,8 @@ public class RentalController {
         Authentication authentication
     ) {
         try {
-            // Retrieve the authenticated user's email
-            String email = authentication.getName();
-
-            // Fetch the user from the database by email
-            User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
             // Delegate rental creation to the service layer
-            rentalService.createRental(name, surface, price, description, picture, user.getId());
+            rentalService.createRental(name, surface, price, description, picture, authentication.getName());
 
             // Return a success message upon successful creation
             return ResponseEntity.ok(new ResponseMessageDTO("Rental created !"));
