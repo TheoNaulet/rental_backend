@@ -3,8 +3,6 @@ package com.example.rental_backend.controller;
 import com.example.rental_backend.dto.RentalDTO;
 import com.example.rental_backend.dto.RentalsWrapperDTO;
 import com.example.rental_backend.dto.ResponseMessageDTO;
-import com.example.rental_backend.model.User;
-import com.example.rental_backend.repository.UserRepository;
 import com.example.rental_backend.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +20,6 @@ import java.util.Optional;
 @RequestMapping("/api/rentals")
 public class RentalController {
 
-    private final UserRepository userRepository;
     private final RentalService rentalService;
 
     /**
@@ -31,9 +28,8 @@ public class RentalController {
      * @param rentalService the service managing rental operations
      * @param userRepository the repository for user data
      */
-    public RentalController(RentalService rentalService, UserRepository userRepository) {
+    public RentalController(RentalService rentalService) {
         this.rentalService = rentalService;
-        this.userRepository = userRepository;
     }
     
     @Operation(summary = "Get all rentals")
