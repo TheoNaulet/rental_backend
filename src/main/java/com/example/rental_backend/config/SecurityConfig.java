@@ -65,18 +65,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {		
         return http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF since we're using stateless JWTs
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless sessions
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers( 
-                        "/api/auth/register", 
-                        "/api/auth/login",
-                        "/api-docs/**",    // Endpoints OpenAPI
-                        "/swagger-ui/**",     // Swagger UI static files
-                        "/swagger-ui.html").permitAll() // Public endpoints
-                    .anyRequest().authenticated() // All other endpoints require authentication
-                ).oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Enable JWT-based OAuth2 resource server
-                .build();
+            .csrf(csrf -> csrf.disable()) // Disable CSRF since we're using stateless JWTs
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless sessions
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers( 
+                    "/api/auth/register", 
+                    "/api/auth/login",
+                    "/api-docs/**",    // Endpoints OpenAPI
+                    "/swagger-ui/**",     // Swagger UI static files
+                    "/swagger-ui.html").permitAll() // Public endpoints
+                .anyRequest().authenticated() // All other endpoints require authentication
+            ).oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Enable JWT-based OAuth2 resource server
+            .build();
     }
 
     /**
