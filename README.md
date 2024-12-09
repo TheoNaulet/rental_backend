@@ -76,6 +76,7 @@ Welcome to the **Rental Backend API**, a project developed in **Spring Boot** to
      spring.datasource.username=your_username
      spring.datasource.password=your_password
      spring.jpa.hibernate.ddl-auto=update
+     server.port=3001
      ```
 
 5. **Install dependencies**
@@ -89,8 +90,8 @@ Welcome to the **Rental Backend API**, a project developed in **Spring Boot** to
    ```
 
 7. **Access the API**
-   - Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-   - API Documentation: [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
+   - Swagger UI: [http://localhost:3001/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+   - API Documentation: [http://localhost:3001/api-docs](http://localhost:8080/api-docs)
 
 ---
 
