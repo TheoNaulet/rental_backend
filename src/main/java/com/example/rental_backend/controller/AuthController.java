@@ -1,31 +1,126 @@
 package com.example.rental_backend.controller;
 
+import com.example.rental_backend.dto.AuthResponseDTO;
+import com.example.rental_backend.dto.LoginDTO;
 import com.example.rental_backend.dto.RegisterDTO;
-import com.example.rental_backend.model.User;
-import com.example.rental_backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.rental_backend.dto.UserDTO;
+import com.example.rental_backend.service.JWTService;
+import com.example.rental_backend.service.UserService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller for authentication-related actions such as login, registration, and user retrieval.
+ */
 @RestController
 @RequestMapping("/api/auth")
+@Validated
 public class AuthController {
 
-    @Autowired
-    private UserRepository userRepository;
+    public JWTService jwtService;
+    public UserService userService;
+    private AuthenticationManager authenticationManager;
 
-    @PostMapping("/register")
-    public String registerUser(@RequestBody RegisterDTO registerDTO) {
-        // Crée un nouvel utilisateur
-        User user = new User();
-        user.setName(registerDTO.getName());
-        user.setEmail(registerDTO.getEmail());
-        user.setPassword(registerDTO.getPassword()); // Pense à sécuriser le mot de passe avec un hash
-
-        // Sauvegarde l'utilisateur dans la base de données
-        userRepository.save(user);
-
-        return "User registered successfully!";
+    /**
+     * Constructor injection for required dependencies.
+     *
+     * @param jwtService              service for JWT management
+     * @param userService             service for user management
+     * @param authenticationManager   authentication manager for Spring Security
+     */
+    public AuthController(JWTService jwtService, UserService userService, AuthenticationManager authenticationManager) {
+        this.jwtService = jwtService;
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * Endpoint to register a new user and immediately return a JWT token.
+     *
+     * @param registerDTO the data for user registration
+     * @return a ResponseEntity containing the generated JWT token
+     */
+    @Operation(summary = "Register a new user", description = "Registers a new user and returns a JWT token.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User registered successfully and JWT token returned."),
+        @ApiResponse(responseCode = "400", description = "Invalid input data."),
+        @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody RegisterDTO registerDTO) {
+        // Register the new user
+        userService.registerUser(registerDTO);
     
+        // Authenticate the user after registration
+        Authentication authenticate = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(registerDTO.getEmail(), registerDTO.getPassword())
+        );
+    
+        // Generate a JWT token
+        String token = jwtService.generateToken(authenticate);
+
+        // Return the response with the token
+        return ResponseEntity.ok(new AuthResponseDTO(token));
+    }
+
+    /**
+     * Endpoint to retrieve the current authenticated user.
+     *
+     * @param authentication the current authentication object
+     * @return a ResponseEntity containing the user's details
+     */
+    @Operation(summary = "Get current authenticated user", description = "Fetches details of the currently authenticated user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User details retrieved successfully."),
+        @ApiResponse(responseCode = "401", description = "Unauthorized access."),
+        @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> getCurrentUser(Authentication authentication) {
+        // Retrieve the user's email from the authentication object
+        String email = authentication.getName();
+
+        // Fetch the user's details using the email
+        UserDTO userResponse = userService.getUserByEmail(email);
+
+        // Return the user's details as a response
+        return ResponseEntity.ok(userResponse);
+    }
+
+
+    /**
+     * Endpoint to log in an existing user and return a JWT token.
+     *
+     * @param loginDTO the data for user login
+     * @return a ResponseEntity containing the generated JWT token
+     */
+    @Operation(summary = "Log in an existing user", description = "Authenticates a user and returns a JWT token.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User logged in successfully and JWT token returned."),
+        @ApiResponse(responseCode = "401", description = "Invalid credentials."),
+        @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
+        // Authenticate the user
+        Authentication authenticate = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
+        );
+
+        // Generate a JWT token
+        String token = jwtService.generateToken(authenticate);
+
+        // Return the response with the token
+        return ResponseEntity.ok(new AuthResponseDTO(token));
+    }
 }
