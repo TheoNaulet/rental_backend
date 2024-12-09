@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * Entity representing a user in the system.
  */
 @Entity
-@Table(name = "users") // Maps this entity to the "users" table in the database
+@Table(name = "USERS") // Maps this entity to the "users" table in the database
 public class User {
 
     @Id
