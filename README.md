@@ -74,48 +74,48 @@ Welcome to the **Rental Backend API**, a project developed in **Spring Boot** to
 ### 🛠️ Database Setup
 
    - Run the following SQL script to set up the necessary tables and relationships for the application:
-
-   ```sql
-   CREATE TABLE `USERS` (
-   `id` integer PRIMARY KEY AUTO_INCREMENT,
-   `email` varchar(255),
-   `name` varchar(255),
-   `password` varchar(255),
-   `created_at` timestamp,
-   `updated_at` timestamp
-   );
-
-   CREATE TABLE `RENTALS` (
-   `id` integer PRIMARY KEY AUTO_INCREMENT,
-   `name` varchar(255),
-   `surface` numeric,
-   `price` numeric,
-   `picture` varchar(255),
-   `description` varchar(2000),
-   `owner_id` integer NOT NULL,
-   `created_at` timestamp,
-   `updated_at` timestamp
-   );
-
-   CREATE TABLE `MESSAGES` (
-   `id` integer PRIMARY KEY AUTO_INCREMENT,
-   `rental_id` integer,
-   `user_id` integer,
-   `message` varchar(2000),
-   `created_at` timestamp,
-   `updated_at` timestamp
-   );
-
-   CREATE UNIQUE INDEX `USERS_index` ON `USERS` (`email`);
-
-   ALTER TABLE `RENTALS` ADD FOREIGN KEY (`owner_id`) REFERENCES `USERS` (`id`);
-
-   ALTER TABLE `MESSAGES` ADD FOREIGN KEY (`user_id`) REFERENCES `USERS` (`id`);
-
-   ALTER TABLE `MESSAGES` ADD FOREIGN KEY (`rental_id`) REFERENCES `RENTALS` (`id`);
-   ```
-
-   Make sure the database is already created (e.g., `rental_backend`), and execute this script in your SQL client.
+   
+      ```sql
+      CREATE TABLE `USERS` (
+      `id` integer PRIMARY KEY AUTO_INCREMENT,
+      `email` varchar(255),
+      `name` varchar(255),
+      `password` varchar(255),
+      `created_at` timestamp,
+      `updated_at` timestamp
+      );
+   
+      CREATE TABLE `RENTALS` (
+      `id` integer PRIMARY KEY AUTO_INCREMENT,
+      `name` varchar(255),
+      `surface` numeric,
+      `price` numeric,
+      `picture` varchar(255),
+      `description` varchar(2000),
+      `owner_id` integer NOT NULL,
+      `created_at` timestamp,
+      `updated_at` timestamp
+      );
+   
+      CREATE TABLE `MESSAGES` (
+      `id` integer PRIMARY KEY AUTO_INCREMENT,
+      `rental_id` integer,
+      `user_id` integer,
+      `message` varchar(2000),
+      `created_at` timestamp,
+      `updated_at` timestamp
+      );
+   
+      CREATE UNIQUE INDEX `USERS_index` ON `USERS` (`email`);
+   
+      ALTER TABLE `RENTALS` ADD FOREIGN KEY (`owner_id`) REFERENCES `USERS` (`id`);
+   
+      ALTER TABLE `MESSAGES` ADD FOREIGN KEY (`user_id`) REFERENCES `USERS` (`id`);
+   
+      ALTER TABLE `MESSAGES` ADD FOREIGN KEY (`rental_id`) REFERENCES `RENTALS` (`id`);
+      ```
+      
+      Make sure the database is already created (e.g., `rental_backend`), and execute this script in your SQL client.
 
    - Update the `application.properties` file with your database credentials:
      ```properties
