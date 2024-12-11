@@ -5,10 +5,13 @@ import com.example.rental_backend.dto.RentalsWrapperDTO;
 import com.example.rental_backend.dto.ResponseMessageDTO;
 import com.example.rental_backend.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.Authentication;
@@ -32,10 +35,27 @@ public class RentalController {
         this.rentalService = rentalService;
     }
     
-    @Operation(summary = "Get all rentals")
+    /**
+     * Endpoint to retrieve all rentals.
+     *
+     * @return a ResponseEntity containing a list of RentalDTOs or an error message
+     */
+    @Operation(summary = "Get all rentals", description = "Fetches a list of all rentals available in the system.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved rentals"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+        @ApiResponse(
+            responseCode = "200",
+            description = "Successfully retrieved rentals",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RentalDTO[].class))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "message": "An unexpected error occurred"
+                }
+            """))
+        )
     })
     @GetMapping
     public ResponseEntity<RentalsWrapperDTO> getAllRentals() {
@@ -62,9 +82,21 @@ public class RentalController {
      */
     @Operation(summary = "Get rental by ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Rental found"),
-        @ApiResponse(responseCode = "404", description = "Rental not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Rental found",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RentalDTO.class))
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Rental not found",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = "{\"message\": \"Rental not found\"}"))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = "{\"message\": \"Internal server error\"}"))
+        )
     })
     @GetMapping("/{id}")
     public ResponseEntity<RentalDTO> getRentalById(@PathVariable Long id) {
@@ -92,16 +124,18 @@ public class RentalController {
     @Operation(summary = "Create a new rental")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Rental created!"),
-        @ApiResponse(responseCode = "400", description = "Invalid input data provided"),
-        @ApiResponse(responseCode = "500", description = "Internal server error occurred")
+        @ApiResponse(responseCode = "400", description = "Invalid input data provided", content = @Content(mediaType = "application/json", schema = @Schema(example = "{\"message\": \"Invalid input data provided\"}"))
+        ),
+        @ApiResponse(responseCode = "500", description = "Internal server error occurred", content = @Content(mediaType = "application/json", schema = @Schema(example = "{\"message\": \"Internal server error\"}"))
+        )
     })
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<ResponseMessageDTO> createRental(
-        @RequestParam("name") String name,
-        @RequestParam("surface") Integer surface,
-        @RequestParam("price") Double price,
-        @RequestParam("description") String description,
-        @RequestParam("picture") MultipartFile picture,
+        String name,
+        Integer surface,
+        Double price,
+        String description,
+        MultipartFile picture,
         Authentication authentication
     ) {
         try {
@@ -128,21 +162,41 @@ public class RentalController {
      * @param surface     the updated surface of the rental
      * @param price       the updated price of the rental
      * @param description the updated description of the rental
-     * @return a ResponseEntity containing the updated RentalDTO or an error status
+     * @return a ResponseEntity containing the updated RentalDTO or an error message
      */
-    @Operation(summary = "Update an existing rental")
+    @Operation(summary = "Update an existing rental", description = "Updates an existing rental's details by its ID.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Rental successfully updated"),
-        @ApiResponse(responseCode = "404", description = "Rental not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+        @ApiResponse(
+            responseCode = "200",
+            description = "Rental successfully updated",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RentalDTO.class))
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Rental not found",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "message": "Rental not found"
+                }
+            """))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "message": "An unexpected error occurred"
+                }
+            """))
+        )
     })
     @PutMapping("/{id}")
     public ResponseEntity<ResponseMessageDTO> updateRental(
         @PathVariable Long id,
-        @RequestParam("name") String name,
-        @RequestParam("surface") Integer surface,
-        @RequestParam("price") Double price,
-        @RequestParam("description") String description
+        String name,
+        Integer surface,
+        Double price,
+        String description
     ) {
         try {
             // Update the rental entity via the service

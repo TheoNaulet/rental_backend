@@ -4,6 +4,8 @@ import com.example.rental_backend.dto.UserDTO;
 import com.example.rental_backend.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -33,19 +35,37 @@ public class UserController {
         this.userService = userService;
     }
 
-
-
     /**
      * Retrieve a user by their ID.
      *
      * @param id the ID of the user
-     * @return a ResponseEntity containing the UserDTO or a 404 Not Found status
+     * @return a ResponseEntity containing the UserDTO if found, or an error message
      */
-    @Operation(summary = "Get user by ID")
+    @Operation(summary = "Get user by ID", description = "Fetches details of a user by their unique ID.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User found"),
-        @ApiResponse(responseCode = "404", description = "User not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+        @ApiResponse(
+            responseCode = "200",
+            description = "User found",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "User not found",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "message": "User not found"
+                }
+            """))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "message": "An unexpected error occurred"
+                }
+            """))
+        )
     })
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {

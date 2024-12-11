@@ -31,13 +31,4 @@ public class LoginDTO {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    /**
-     * Sets the email using a user-provided login identifier.
-     * This can be useful if the login is interpreted as an email.
-     * @param login the user's login identifier
-     */
-    public void setLogin(String login) {
-        this.email = login; 
-    }
 }

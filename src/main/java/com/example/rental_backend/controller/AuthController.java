@@ -8,6 +8,8 @@ import com.example.rental_backend.service.JWTService;
 import com.example.rental_backend.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -48,13 +50,37 @@ public class AuthController {
      * Endpoint to register a new user and immediately return a JWT token.
      *
      * @param registerDTO the data for user registration
-     * @return a ResponseEntity containing the generated JWT token
+     * @return a ResponseEntity containing the generated JWT token or an error message
      */
     @Operation(summary = "Register a new user", description = "Registers a new user and returns a JWT token.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User registered successfully and JWT token returned."),
-        @ApiResponse(responseCode = "400", description = "Invalid input data."),
-        @ApiResponse(responseCode = "500", description = "Internal server error.")
+        @ApiResponse(
+            responseCode = "200",
+            description = "User registered successfully and JWT token returned.",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+            """))
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid input data.",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "message": "Invalid input data: email already exists."
+                }
+            """))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error.",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "message": "An unexpected error occurred."
+                }
+            """))
+        )
     })
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody RegisterDTO registerDTO) {
@@ -81,9 +107,37 @@ public class AuthController {
      */
     @Operation(summary = "Get current authenticated user", description = "Fetches details of the currently authenticated user.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User details retrieved successfully."),
-        @ApiResponse(responseCode = "401", description = "Unauthorized access."),
-        @ApiResponse(responseCode = "500", description = "Internal server error.")
+        @ApiResponse(
+            responseCode = "200",
+            description = "User details retrieved successfully.",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "johndoe@example.com",
+                    "createdAt": "2024-01-01T12:00:00",
+                    "updatedAt": "2024-01-02T12:00:00"
+                }
+            """))
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized access.",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "message": "Unauthorized access."
+                }
+            """))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error.",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                {
+                    "message": "Internal server error."
+                }
+            """))
+        )
     })
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getCurrentUser(Authentication authentication) {
@@ -106,9 +160,21 @@ public class AuthController {
      */
     @Operation(summary = "Log in an existing user", description = "Authenticates a user and returns a JWT token.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User logged in successfully and JWT token returned."),
-        @ApiResponse(responseCode = "401", description = "Invalid credentials."),
-        @ApiResponse(responseCode = "500", description = "Internal server error.")
+        @ApiResponse(
+            responseCode = "200",
+            description = "User logged in successfully and JWT token returned.",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = "{\"token\": \"your-jwt-token-here\"}"))
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "Invalid credentials.",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = "{\"message\": \"Invalid credentials.\"}"))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error.",
+            content = @Content(mediaType = "application/json", schema = @Schema(example = "{\"message\": \"Internal server error.\"}"))
+        )
     })
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
